@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pburritos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+  background: #f5f0e1;
+  padding: 20px;
+  color: #4a3b2b;
+}
+   body.dark {
+  background: #2e2a26;
+  color: #f5f0e1;
+}
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding: 0 20px;
+      background: #b77b57;
+    }
+    h1 {
+      font-size: 2.5rem;
+      color: #fffaf2;
+    }
+    .navbar {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 20px;
+    }
+    .navbar button {
+      background: none;
+      border: none;
+      color: #fffaf2;
+      font-size: 1rem;
+      cursor: pointer;
+      padding: 10px 15px;
+    }
+    .navbar button:hover {
+      background:  #9c5c38;
+      border-radius: 5px;
+    }
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .filters button, .toggle-theme {
+      padding: 8px 12px;
+      margin-right: 10px;
+      background: #b77b57;
+      border: none;
+      color: #fffaf2;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .filters button.active {
+      background: #9c5c38;
+    }
+    .view-cart-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #b77b57;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      z-index: 100;
+      cursor: pointer;
+    }
+    .cart-drawer {
+      position: fixed;
+      top: 0;
+      right: -400px;
+      width: 300px;
+      height: 100%;
+      background: #fffaf2;
+      color: #4a3b2b;
+      box-shadow: -2px 0 8px rgba(0,0,0,0.2);
+      padding: 20px;
+      transition: right 0.3s ease;
+      z-index: 999;
+    }
+    .dark .cart-drawer {
+      background:#3b312b;
+      color:  #f5f0e1;
+    }
+    .cart-drawer.open {
+      right: 0;
+    }
+    #cart-items {
+      list-style: none;
+      padding: 0;
+    }
+    #cart-items li {
+      margin-bottom: 15px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 8px;
+    }
+    #cart-items button {
+      background: #e5533e;
+      color: white;
+      border: none;
+      padding: 4px 8px;
+      margin-top: 5px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .content {
+      padding: 20px;
+      background:  #fffaf2;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      margin-top: 20px;
+    }
+    .food-card {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 20px;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .food-card img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    .food-card .food-info {
+      flex-grow: 1;
+    }
+    .food-card button {
+      padding: 8px 15px;
+      background: #9c5c38;
+      border: none;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .food-card button:hover {
+      background: #b77b57;
+    }
+    .testimonial-card {
+  flex: 1;
+  min-width: 250px;
+  background: #fdfdfd;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  transition: transform 0.3s ease;
+}
+.testimonial-card:hover {
+  transform: translateY(-5px);
+}
+
+.testimonial-card img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+  box-shadow: 0 0 0 3px #FFD70055;
+}
+
+.testimonial-card .stars {
+  margin-top: 10px;
+  color: #FFD700;
+  font-size: 18px;
+}
+
+#testimonial-section.show {
+  opacity: 1 !important;
+}
+
+#product-highlights {
+  padding: 3rem 1rem;
+  text-align: center;
+}
+
+#product-highlights h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
+
+.highlight-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.highlight-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  padding: 1rem;
+  max-width: 250px;
+  text-align: left;
+  transition: transform 0.3s;
+}
+
+.highlight-card:hover {
+  transform: scale(1.05);
+}
+
+.highlight-card img {
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.highlight-card h3 {
+  font-size: 1.2rem;
+  margin: 0.5rem 0;
+  color:#1e1e1e
+}
+
+.highlight-card p {
+  font-size: 0.95rem;
+  color: #555;
+}
+
+body.dark footer {
+  background:  #b77b57;
+  color: white;
+}
+
+body.dark footer a {
+  color: #f5f0e1;
+}
+
+  </style>
+</head>
+<body>
+  <header>
+    <h1>PBurritsscratch</h1>
+    <div class="navbar">
+      <button onclick="showHome()">Home</button>
+      <button onclick="showMenu()">Menu</button>
+      <button onclick="showAbout()">About Us</button>
+      <button onclick="showTestimonials()">Testimonials</button>
+      <button onclick="showContact()">Contact</button>
+    </div>
+  </header> 
+  
+  <!-- Home/Landing Section -->
+<div id="home-section" style="display: block; padding: 60px 20px; text-align: center;"> 
+  <div id="header-image" style="position: relative; width: 100%; height: 70vh; overflow: hidden;">
+    <img src="fpimg/shawarma-chicken.jpg" alt="" style="width: 100%; height: 100%; object-fit: cover;">
+     <!-- Overlay Text -->
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                text-align: center; color: white; text-shadow: 2px 2px 5px rgba(0,0,0,0.7);">
+     <h1 style="font-size: 3rem; margin: 0;">Welcome to PBurritos</h1>
+     <p style="font-size: 1.5rem;">Delicious bites. Chilled drinks. Local love.</p>
+     Bold flavors, sweet treats, and refreshing drinks — all in one place. Your craving is just a click away</p>
+     <button onclick="showMenu()" style="padding: 12px 24px; font-size: 1rem; background: #b77b57; color: white; border: none; border-radius: 6px; cursor: pointer;">
+     Explore Menu</button> 
+    </div>
+  </div>
+  <section id="product-highlights">
+    <h2>Product Highlights</h2>
+    <div class="highlight-container">
+  
+      <div class="highlight-card">
+        <img src="fpimg/shawarma-chicken.jpg" alt="Shawarma Pie Chicken">
+        <h3>Shawarma Pie Chicken</h3>
+        <p>Our signature dish, marinated for 24 hours with a secret blend of spices.</p>
+      </div>
+  
+      <div class="highlight-card">
+        <img src="fpimg/blueberry.jpg" alt="Fruit Soda">
+        <h3>Fruit Soda</h3>
+        <p>Made with locally-sourced fruits and homemade syrup — 100% natural.</p>
+      </div>
+  
+      <div class="highlight-card">
+        <img src="fpimg/halohalo.jpg" alt="Halo-Halo Delight">
+        <h3>Halo-Halo Delight</h3>
+        <p>Voted top favorite with over 300 five-star reviews!</p>
+      </div>
+  
+    </div>
+  </section>  
+</div>  
+
+<div id="menu-section" style="display: none;">
+ <div class="controls">
+   <div class="filters">
+    <button data-filter="all" class="active">All</button>
+    <button data-filter="Burritos">Burritos</button>
+    <button data-filter="Halo Halo">Halo Halo</button>
+    <button data-filter="Fruit Soda">Fruit Soda</button>
+    <button data-filter="Fruit Milk">Fruit Milk</button>
+   </div>
+   <button class="toggle-theme">Toggle Theme</button>
+ </div>
+<div id="food-list"></div>
+  <!-- View Cart button now includes the cart number -->
+  <button class="view-cart-btn" id="view-cart-btn">View Cart (0)</button>
+  <div class="cart-drawer" id="cart-drawer">
+    <h2>Your Cart</h2>
+    <ul id="cart-items"></ul>
+    <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
+      <button id="checkout-btn" style="padding: 10px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">
+        Checkout
+      </button>
+      <button id="close-cart" style="padding: 10px; background: #e5533e; color: white; border: none; border-radius: 5px; cursor: pointer;">
+        Close
+      </button>
+    </div>
+    
+  </div>
+</div>
+
+<div id="cart-wrapper" style="display: none;">
+  <button class="view-cart-btn" id="view-cart-btn">View Cart (0)</button>
+</div>
+
+<div id="about-us-section" style="display: none; margin-top: 40px; padding: 20px; background: #fff; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+  <h2>About Us</h2>
+  <p style="margin-top: 10px; font-size: 1rem; line-height: 1.6;">
+    PBurritsscratch started with a simple idea: to bring the bold flavors of burritos and refreshing drinks to your table with a twist of local flair.
+    <br><br>
+    We’re a small passionate team dedicated to delivering delicious, freshly-prepared meals — fast, affordable, and always satisfying. Whether you're craving a quick lunch or a sweet treat, we’ve got something special for everyone.
+  </p>
+</div>
+
+<div id="testimonial-section" style="display: none; margin-top: 40px; padding: 20px; background: #fff; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); opacity: 0; transition: opacity 0.6s ease;">
+  <h2 style="margin-bottom: 20px;">What Our Customers Say</h2>
+  <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+    
+    <!-- Testimonial Card 1 -->
+    <div class="testimonial-card">
+      <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Maria" />
+      <h4>Maria Santos</h4>
+      <p>"Absolutely love the burritos! Fresh, flavorful, and fast service every time."</p>
+      <div class="stars">★★★★★</div>
+    </div>
+
+    <!-- Testimonial Card 2 -->
+    <div class="testimonial-card">
+      <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="John" />
+      <h4>John Cruz</h4>
+      <p>"The fruit sodas are amazing and unique. I always come back for more!"</p>
+      <div class="stars">★★★★☆</div>
+    </div>
+
+    <!-- Testimonial Card 3 -->
+    <div class="testimonial-card">
+      <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Anna" />
+      <h4>Anna Reyes</h4>
+      <p>"Halo-halo perfection! Sweet, cold, and a perfect treat on hot days."</p>
+      <div class="stars">★★★★★</div>
+    </div>
+ </div>
+</div>
+
+<div id="contact-us-section" style="display: none; margin-top: 40px; padding: 20px; background: #fff; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+  <h2>Contact Us</h2>
+  <p style="font-size: 1rem; line-height: 1.6; margin-top: 10px;">
+    Have any questions, concerns, or feedback? We’d love to hear from you! Reach out to us on Facebook by clicking the link below:
+  </p>
+  <p>
+    <a href="https://www.facebook.com/profile.php?id=61555426561366" target="_blank" style="color: #b77b57; text-decoration: none; font-size: 1.2rem; font-weight: bold;">
+      Visit our Facebook Page
+    </a>
+  </p>
+</div>
+<footer style="background:#b77b57; color:#fffaf2; padding: 40px 20px; margin-top: 60px;">
+  <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 30px; max-width: 1200px; margin: auto;">
+    <!-- Brand Info -->
+    <div style="flex: 1; min-width: 200px;">
+      <h2 style="margin-bottom: 10px;">PBurritsscratch</h2>
+      <p>Delicious bites, refreshing drinks, and sweet delights—all in one place.</p>
+    </div>
+
+    <!-- Navigation -->
+    <div style="flex: 1; min-width: 150px;">
+      <h3 style="margin-bottom: 10px;">Quick Links</h3>
+      <ul style="list-style: none; padding: 0;">
+        <li><a href="#" onclick="showHome()" style="color:white; text-decoration: none;">Home</a></li>
+        <li><a href="#" onclick="showMenu()" style="color:white; text-decoration: none;">Menu</a></li>
+        <li><a href="#" onclick="showAbout()" style="color:white; text-decoration: none;">About Us</a></li>
+        <li><a href="#" onclick="showTestimonials()" style="color:white; text-decoration: none;">Testimonials</a></li>
+        <li><a href="#" onclick="showContact()" style="color:white; text-decoration: none;">Contact</a></li>
+      </ul>
+    </div>
+
+    <!-- Contact Info -->
+    <div style="flex: 1; min-width: 200px;">
+      <h3 style="margin-bottom: 10px;">Contact Us</h3>
+      <p>Email: pburritos@example.com</p>
+      <p>Phone: 0947 833 9676</p>
+      <p>Location: Purok 4 Dolores Magalang, Pampanga, Philippines</p>
+    </div>
+
+    <!-- Social Media -->
+    <div style="flex: 1; min-width: 150px;">
+      <h3 style="margin-bottom: 10px;">Follow Us</h3>
+      <div style="display: flex; gap: 10px;">
+        <a href="#" style="color: white; font-size: 1.2rem;">🌐</a>
+        <a href="#" style="color: white; font-size: 1.2rem;">📘</a>
+        <a href="#" style="color: white; font-size: 1.2rem;">📸</a>
+        <a href="#" style="color: white; font-size: 1.2rem;">🐦</a>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align: center; margin-top: 30px; font-size: 0.9rem;">
+    &copy; 2025 PBurritsscratch. All rights reserved.
+  </div>
+</footer>
+
+<script>
+   const menuBtn = document.getElementById("menu-btn");
+   const menuSection = document.getElementById("menu-section");
+   const homeSection = document.getElementById("home-section");
+  
+function hideAllSections() {
+  homeSection.style.display = "none";
+  menuSection.style.display = "none";
+  document.getElementById("about-us-section").style.display = "none";
+  document.getElementById("testimonial-section").style.display = "none";
+  document.getElementById("contact-us-section").style.display = "none";
+  document.querySelector(".controls").style.display = "none";
+}
+
+function showHome() {
+  hideAllSections();
+  homeSection.style.display = "block";
+}
+
+function showMenu() {
+  hideAllSections();
+  menuSection.style.display = "block";
+  document.querySelector(".controls").style.display = "flex";
+  renderItems(); // optional if you define it
+}
+
+
+function showAbout() {
+  hideAllSections();
+  homeSection.style.display = "none";
+  menuSection.style.display = "none";
+  document.querySelector(".controls").style.display = "none";
+  foodList.innerHTML = ""; // Optional: clear menu
+  document.getElementById("about-us-section").style.display = "block";
+  document.getElementById("testimonial-section").style.display = "none"; // Hide testimonial section
+}
+
+function showTestimonials() {
+  hideAllSections();
+  homeSection.style.display = "none";
+  menuSection.style.display = "none";
+  document.querySelector(".controls").style.display = "none";
+  foodList.innerHTML = "";
+  document.getElementById("about-us-section").style.display = "none";
+
+  const testimonialSection = document.getElementById("testimonial-section");
+  testimonialSection.style.display = "block";
+  
+  // Trigger animation
+  setTimeout(() => {
+    testimonialSection.classList.add("show");
+  }, 50);
+}
+
+function showContact() {
+  hideAllSections();
+  // Hide all other sections
+  homeSection.style.display = "none";
+  menuSection.style.display = "none";
+  document.getElementById("about-us-section").style.display = "none";
+  document.getElementById("testimonial-section").style.display = "none";
+  document.querySelector(".controls").style.display = "none";
+  foodList.innerHTML = "";
+
+  // ✅ Show only contact section
+  document.getElementById("contact-us-section").style.display = "block";
+}
+
+    const foodItems = [
+  { name: "Shawarma Pie Chicken", category: "Burritos", image: "fpimg/shawarma-chicken.jpg", desc: "", price:45.00},
+  { name: "Shawarma Pie Beef", category: "Burritos", image: "fpimg/shawarma-beef.jpg", desc: "", price: 50.00 },
+  { name: "Pburrit-O w/rice(Chicken)", category: "Burritos", image: "fpimg/pburrit-chickenrice.jpg", desc: "", price:89.00 },
+  { name: "Pburrit-O w/rice(Beef)", category: "Burritos", image: "fpimg/pburrit-beefrice.jpg", desc: "", price: 109.00 },
+  { name: "Mi Pburrit-O w/orice(Chicken)", category: "Burritos", image: "fpimg/pburrit-wochicken.jpg", desc: "", price: 119.00 },
+  { name: "Pburrit-O w/orice(Beef)", category: "Burritos", image: "fpimg/pburrit-wobeef.jpg", desc: "", price: 139.00 },
+
+  // New items
+  { name: "Halo Halo", category: "Halo Halo", image: "fpimg/halohalo.jpg", desc: "", price: 50.00 },
+  { name: "Blueberry", category: "Fruit Soda", image: "fpimg/blueberry.jpg", desc: "", price: 24.00 },
+  { name: "Strawberry", category: "Fruit Soda", image: "fpimg/strawberry.jpg", desc: "", price: 24.00 },
+  { name: "Lemon", category: "Fruit Soda", image: "fpimg/lemon.jpg", desc: "", price: 24.00 },
+  { name: "Passion Fruit", category: "Fruit Milk", image: "https://source.unsplash.com/featured/?tempura-udon", desc: "", price: 39.00 },
+  { name: "Blueberry", category: "Fruit Milk", image: "https://source.unsplash.com/featured/?veggie-burger", desc: "", price: 39.00 },
+  { name: "Strawberry", category: "Fruit Milk", image: "https://source.unsplash.com/featured/?hawaiian-pizza", desc: "", price: 39.00 }
+];
+
+
+let cart = [];
+  const foodList = document.getElementById("food-list");
+  const viewCartBtn = document.getElementById("view-cart-btn");
+  const cartDrawer = document.getElementById("cart-drawer");
+  const cartItemsList = document.getElementById("cart-items");
+  const closeCart = document.getElementById("close-cart");
+  const filterButtons = document.querySelectorAll(".filters button");
+  const themeToggle = document.querySelector(".toggle-theme");
+
+  function renderItems(filter = "all") {
+    foodList.innerHTML = "";
+    const filtered = filter === "all" ? foodItems : foodItems.filter(item => item.category === filter);
+    filtered.forEach(item => {
+      const card = document.createElement("div");
+      card.classList.add("food-card");
+      card.innerHTML = `
+        <img src="${item.image}" alt="${item.name}">
+        <div class="food-info">
+          <h3>${item.name}</h3>
+          <p>${item.desc}</p>
+          <p><strong>₱${item.price.toFixed(2)}</strong></p>
+          <button class="add-btn">Add to Cart</button>
+        </div>
+      `;
+      const addBtn = card.querySelector(".add-btn");
+      addBtn.addEventListener("click", () => addToCart(item.name));
+      foodList.appendChild(card);
+    });
+  }
+
+  function addToCart(itemName) {
+    const existing = cart.find(item => item.name === itemName);
+    if (existing) {
+      existing.qty += 1;
+    } else {
+      cart.push({ name: itemName, qty: 1 });
+    }
+    updateCartDisplay();
+  }
+
+  function updateCartDisplay() {
+    const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+    viewCartBtn.textContent = `View Cart (${totalItems})`;
+    renderCartItems();
+  }
+
+  function renderCartItems() {
+    cartItemsList.innerHTML = "";
+    let total = 0;
+
+    cart.forEach((item, index) => {
+      const food = foodItems.find(f => f.name === item.name);
+      const subtotal = food.price * item.qty;
+      total += subtotal;
+
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <strong>${item.name}</strong><br/>
+        Qty: ${item.qty} × ₱${food.price.toFixed(2)}<br/>
+        Subtotal: ₱${subtotal.toFixed(2)}<br/>
+        <button onclick="removeFromCart(${index})">Remove</button>
+      `;
+      cartItemsList.appendChild(li);
+    });
+
+    const totalLi = document.createElement("li");
+    totalLi.innerHTML = `<strong>Total: ₱${total.toFixed(2)}</strong>`;
+    cartItemsList.appendChild(totalLi);
+  }
+
+  function removeFromCart(index) {
+    cart.splice(index, 1);
+    updateCartDisplay();
+  }
+//checkout button  
+  document.getElementById("checkout-btn").addEventListener("click", function () {
+  // You can customize this alert or replace it with a redirect
+  alert("Thank you for your order! Your checkout is being processed.");
+  document.getElementById("cart-drawer").classList.remove("open");
+
+  // Optional: Clear the cart after checkout
+  document.getElementById("cart-items").innerHTML = "";
+  document.getElementById("view-cart-btn").textContent = "View Cart (0)";
+});
+
+  viewCartBtn.addEventListener("click", () => {
+    cartDrawer.classList.add("open")
+  })
+  closeCart.addEventListener("click", () => {
+    cartDrawer.classList.remove("open");
+  });
+
+  filterButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelector(".filters button.active").classList.remove("active");
+      btn.classList.add("active");
+      renderItems(btn.dataset.filter);
+    });
+  });
+
+  themeToggle.addEventListener("click", () => {
+    document.body.classList.toggle("dark");
+  });
+
+  renderItems();
+  updateCartDisplay();
+
+</script>
+</body>
+</html>
